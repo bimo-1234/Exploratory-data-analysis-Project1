@@ -1,0 +1,17 @@
+library("date.table")
+setwd("~/Desktop/datasciencecoursera/4_Exploratory_Data_Analysis/project/data")
+#Reads in data from file then subsets data for specified dates
+powerDT<- data.table::fread(input="household_power_consmuption.txt"
+                            , na.strings="?"
+                            )
+#Prevents histogram from printing in scientific notation
+powerDT[, Global_active_power:=lapply(.SD, as.numeric), .SDcols= c("Global_active_power")]
+#Change Date Column to Data Type
+powerDT[, Date:=lapply(.SD, as.date, "%d%m%Y"), .SDcols= c("Date")]
+#Filter Dates for 2007-02-01and 2007-02-02
+powerDT<-powerDT[(Date>= "2007-02-01")& (Date<="2007-02-02")]
+png("plot1.png",width=480, height=480)
+##Plot1
+hist(powerDT[, Global_active_power], main="Global Active Power",
+     xlab="Global Active Power(kilowats)", ylab="Frequency", col="Red"
+dev.off()     
